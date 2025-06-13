@@ -40,23 +40,30 @@ except Exception as e:
     print(f"Erro ao conectar no Arduino: {e}")
 
 def acionar_motor(nome):
+    print(f"[MOTOR] Solicitando liberação para '{nome}'...")
     if arduino and arduino.is_open:
         comando = f"liberar:{nome}\n"
         arduino.write(comando.encode())
-        print(f"Comando enviado ao Arduino para liberar '{nome}'.")
+        print(f"[MOTOR] Comando enviado ao Arduino para liberar '{nome}'.")
     else:
-        print("[ERRO] Arduino desconectado!")
+        print("[MOTOR][ERRO] Arduino desconectado!")
 
 def monitorar_medicamentos():
     while True:
         agora = datetime.now().strftime("%Y-%m-%d %H:%M")
         with lock:
             for i, slot in enumerate(slots):
-                if slot and slot['horario'] == agora:
+                if slot and slot['horario'] == agora and not slot.get('notificado'):
                     acionar_motor(slot['nome'])
-                    slots[i] = None
+                    slots[i]['notificado'] = True
                     salvar_slots()
-        time.sleep(30)
+                # Remove slot 2 minutos depois do horário
+                if slot and slot.get('notificado') and slot['horario'] != agora:
+                    slot_time = datetime.strptime(slot['horario'], "%Y-%m-%d %H:%M")
+                    if (datetime.now() - slot_time).total_seconds() > 120:
+                        slots[i] = None
+                        salvar_slots()
+        time.sleep(5)
 
 @app.route('/medicamentos', methods=['GET'])
 def listar_medicamentos():
@@ -84,7 +91,7 @@ def cadastrar_medicamento():
             'horario': horario,
             'recorrente': data.get('recorrente', False)
         }
-        salvar_slots()  # Salva após alteração
+        salvar_slots()
     return jsonify({"mensagem": "Medicamento cadastrado com sucesso!"})
 
 @app.route('/medicamentos/<int:slot_idx>', methods=['DELETE'])
@@ -93,10 +100,22 @@ def remover_medicamento(slot_idx):
         return jsonify({"erro": "Slot inválido"}), 400
     with lock:
         slots[slot_idx-1] = None
-        salvar_slots()  # Salva após alteração
+        salvar_slots()
     return jsonify({"mensagem": "Medicamento removido com sucesso!"})
+
+@app.route('/alerta-medicamento', methods=['POST'])
+def alerta_medicamento():
+    data = request.json
+    nome = data.get('nome')
+    slot = data.get('slot')
+    horario = data.get('horario')
+    if not nome or not slot or not horario:
+        return jsonify({"erro": "Dados incompletos"}), 400
+    acionar_motor(nome)
+    return jsonify({"mensagem": f"Alerta recebido e comando enviado para liberar '{nome}'."})
 
 if __name__ == '__main__':
     carregar_slots()
+    # Inicia o monitoramento dos medicamentos em thread separada
     threading.Thread(target=monitorar_medicamentos, daemon=True).start()
     app.run(host='0.0.0.0', port=5000)

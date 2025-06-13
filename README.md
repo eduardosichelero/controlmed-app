@@ -1,21 +1,22 @@
 # ControlMed
 
-Aplicação para controle de medicamentos, com interface web (React) e backend Node.js, integrável a dispositivos IoT (ex: Arduino).
+Aplicação para controle de medicamentos, com interface web moderna (React + Tailwind CSS) e backend Node.js, integrável a dispositivos IoT (ex: Arduino ou Raspberry Pi).
 
 ## Funcionalidades
 
-- Cadastro e gerenciamento de medicamentos
-- Lembrete visual na tela para horários de medicação
-- Integração futura com Arduino para alerta sonoro (buzzer)
-- Estatísticas de uso
-- Interface responsiva
+- Cadastro, edição e remoção de medicamentos
+- Lembrete visual na tela para horários de medicação, com alerta centralizado e botão para desligar
+- Notificações automáticas e feedback visual moderno
+- Integração futura com Arduino/Raspberry Pi para alerta sonoro (buzzer/motor)
+- Estatísticas de uso e histórico
+- Interface responsiva e acessível
 
 ## Tecnologias
 
 - React (frontend)
+- Tailwind CSS (estilização)
 - Node.js (backend)
-- Tailwind CSS
-- Integração planejada com Arduino via API
+- Integração planejada com Arduino/Raspberry Pi via API REST
 
 ## Instalação
 
@@ -44,7 +45,7 @@ Aplicação para controle de medicamentos, com interface web (React) e backend N
 ## Estrutura do Projeto
 
 ```
-controlmed-project/
+controlmed-app/
   client/      # Frontend React
   server/      # Backend Node.js
   .env         # Variáveis de ambiente (adicione manualmente)
@@ -52,12 +53,14 @@ controlmed-project/
 
 ## Observações
 
-- Para integração com Arduino, será necessário configurar a comunicação no backend.
-- Não esqueça de criar o arquivo `.env` com as variáveis necessárias.
+- Para integração com Arduino/Raspberry Pi, será necessário configurar a comunicação no backend.
+- Crie o arquivo `.env` com as variáveis necessárias (exemplo disponível no projeto).
+- O alerta visual é exibido no horário do medicamento e pode ser desligado pela interface.
 
 ## Licença
 
 ISC
 
 ---
+
 Desenvolvido por [Seu Nome ou Equipe]
