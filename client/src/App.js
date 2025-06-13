@@ -206,7 +206,7 @@ export default function ControleMedicamentos() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [alertasDesligados]);
+  }, [alertasEnviados, alertasDesligados]);
 
   const desligarAlerta = (horario) => {
     setLembrete(null);

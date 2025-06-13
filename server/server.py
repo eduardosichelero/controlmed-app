@@ -3,7 +3,7 @@ from flask_cors import CORS
 import serial
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os
 
@@ -53,16 +53,24 @@ def monitorar_medicamentos():
         agora = datetime.now().strftime("%Y-%m-%d %H:%M")
         with lock:
             for i, slot in enumerate(slots):
-                if slot and slot['horario'] == agora and not slot.get('notificado'):
-                    acionar_motor(slot['nome'])
-                    slots[i]['notificado'] = True
-                    salvar_slots()
-                # Remove slot 2 minutos depois do horário
-                if slot and slot.get('notificado') and slot['horario'] != agora:
+                if slot:
                     slot_time = datetime.strptime(slot['horario'], "%Y-%m-%d %H:%M")
-                    if (datetime.now() - slot_time).total_seconds() > 120:
-                        slots[i] = None
+                    # Se o horário já passou e é recorrente, reagende
+                    if slot.get('recorrente') and datetime.now() > slot_time:
+                        novo_horario = (slot_time + timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
+                        slots[i]['horario'] = novo_horario
+                        slots[i]['notificado'] = False
                         salvar_slots()
+                    # Notifica se for o horário exato
+                    elif slot['horario'] == agora and not slot.get('notificado'):
+                        acionar_motor(slot['nome'])
+                        slots[i]['notificado'] = True
+                        salvar_slots()
+                    # Remove slot não recorrente 2 minutos depois
+                    elif slot.get('notificado') and not slot.get('recorrente') and slot['horario'] != agora:
+                        if (datetime.now() - slot_time).total_seconds() > 120:
+                            slots[i] = None
+                            salvar_slots()
         time.sleep(5)
 
 @app.route('/medicamentos', methods=['GET'])
@@ -89,7 +97,9 @@ def cadastrar_medicamento():
         slots[slot_idx] = {
             'nome': nome,
             'horario': horario,
-            'recorrente': data.get('recorrente', False)
+            'recorrente': data.get('recorrente', False),
+            'notificado': False,           # <--- inicializa como False
+            'slot': slot_idx + 1           # <--- salva o número do slot
         }
         salvar_slots()
     return jsonify({"mensagem": "Medicamento cadastrado com sucesso!"})
@@ -112,6 +122,12 @@ def alerta_medicamento():
     if not nome or not slot or not horario:
         return jsonify({"erro": "Dados incompletos"}), 400
     acionar_motor(nome)
+    # Marca o slot como notificado, se existir
+    with lock:
+        idx = int(slot) - 1
+        if idx in [0, 1, 2] and slots[idx] and slots[idx]['nome'] == nome and slots[idx]['horario'] == horario:
+            slots[idx]['notificado'] = True
+            salvar_slots()
     return jsonify({"mensagem": f"Alerta recebido e comando enviado para liberar '{nome}'."})
 
 if __name__ == '__main__':

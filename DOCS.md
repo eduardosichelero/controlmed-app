@@ -2,23 +2,11 @@
 
 ## Visão Geral
 
-O **ControlMed** é uma solução completa para controle de medicamentos, composta por uma aplicação web moderna (frontend em React + Tailwind CSS) e um backend em Python (Flask), com integração opcional a dispositivos IoT como Arduino ou Raspberry Pi. O sistema permite cadastrar, editar e remover medicamentos, além de emitir lembretes visuais e, futuramente, acionar dispositivos físicos para alertas sonoros ou liberação de compartimentos.
+O **ControlMed** é uma solução completa para controle de medicamentos, composta por uma aplicação web moderna (frontend em React + Tailwind CSS) e um backend em Python (Flask), com integração opcional a dispositivos IoT como Arduino ou Raspberry Pi. O sistema permite cadastrar, editar e remover medicamentos, além de emitir lembretes visuais e acionar dispositivos físicos para alertas sonoros ou liberação de compartimentos.
 
 ---
 
-## O que faz o App (Frontend)
-
-- **Cadastro, edição e remoção de medicamentos:** Interface intuitiva para gerenciar até 3 medicamentos, com horários e recorrência.
-- **Lembrete visual:** Exibe um alerta centralizado na tela no horário do medicamento, com botão para desligar o alerta.
-- **Notificações automáticas:** Mensagens de feedback para ações do usuário (ex: cadastro, remoção, alerta desligado).
-- **Banner de próxima dose:** Mostra o próximo medicamento agendado e um cronômetro regressivo.
-- **Estatísticas e histórico:** Visualização do uso e histórico de medicamentos.
-- **Interface responsiva:** Funciona em desktop e dispositivos móveis.
-- **Acessibilidade:** Cores, botões e textos pensados para fácil leitura e interação.
-
----
-
-## O que faz o Server (Backend)
+## Funcionalidades do Servidor (Backend Flask)
 
 - **API RESTful:** Gerencia os dados dos medicamentos (cadastrar, listar, remover).
 - **Persistência:** Salva os slots de medicamentos em arquivo JSON.
@@ -30,6 +18,87 @@ O **ControlMed** é uma solução completa para controle de medicamentos, compos
   - `POST /medicamentos` — Cadastra ou atualiza um medicamento.
   - `DELETE /medicamentos/<slot>` — Remove um medicamento do slot.
   - `POST /alerta-medicamento` — Aciona o alerta físico via Arduino.
+
+### Detalhamento das Rotas
+
+#### 1. Cadastro de Medicamentos
+
+- **Endpoint:** `POST /medicamentos`
+- **Descrição:** Cadastra um medicamento em um dos três slots disponíveis.
+- **Corpo da requisição:**
+  ```json
+  {
+    "slot": 1,
+    "nome": "Paracetamol",
+    "horario": "2025-06-14 12:00",
+    "recorrente": true
+  }
+  ```
+- **Resposta:**  
+  `{"mensagem": "Medicamento cadastrado com sucesso!"}`
+
+#### 2. Listagem de Medicamentos
+
+- **Endpoint:** `GET /medicamentos`
+- **Descrição:** Retorna todos os slots com informações dos medicamentos cadastrados.
+- **Resposta:**
+  ```json
+  [
+    {
+      "nome": "Paracetamol",
+      "horario": "2025-06-14 12:00",
+      "recorrente": true,
+      "slot": 1
+    },
+    ...
+  ]
+  ```
+
+#### 3. Remoção de Medicamento
+
+- **Endpoint:** `DELETE /medicamentos/<slot>`
+- **Descrição:** Remove o medicamento do slot informado (1, 2 ou 3).
+- **Resposta:**  
+  `{"mensagem": "Medicamento removido com sucesso!"}`
+
+#### 4. Alerta Manual de Medicamento
+
+- **Endpoint:** `POST /alerta-medicamento`
+- **Descrição:** Aciona manualmente o motor do Arduino para liberar o medicamento do slot informado.
+- **Corpo da requisição:**
+  ```json
+  {
+    "nome": "Paracetamol",
+    "slot": 1,
+    "horario": "2025-06-14 12:00"
+  }
+  ```
+- **Resposta:**  
+  `{"mensagem": "Alerta recebido e comando enviado para liberar 'Paracetamol'."}`
+
+#### 5. Monitoramento Automático
+
+- O servidor monitora continuamente os horários dos medicamentos.
+- Quando chega o horário de um medicamento:
+  - Aciona o motor do Arduino para liberar o compartimento.
+  - Marca o slot como "notificado".
+  - Se for recorrente, agenda para o próximo dia.
+  - Se não for recorrente, remove o medicamento do slot após 2 minutos.
+
+---
+
+## Funcionalidades do App (Frontend React)
+
+- **Dashboard:** Visualização dos slots, horários e status dos medicamentos.
+- **Cadastro:** Formulário para cadastrar medicamentos em slots, definindo nome, horário e recorrência.
+- **Remoção:** Botão para remover medicamentos dos slots.
+- **Medicamentos Comuns:** Lista de medicamentos populares para cadastro rápido.
+- **Estatísticas:** Resumo dos medicamentos cadastrados e próximos horários.
+- **Banner:** Exibe o próximo medicamento a ser liberado e o tempo restante.
+- **Lembrete visual:** Exibe um alerta centralizado na tela no horário do medicamento, com botão para desligar o alerta.
+- **Notificações automáticas:** Mensagens de feedback para ações do usuário (ex: cadastro, remoção, alerta desligado).
+- **Interface responsiva:** Funciona em desktop e dispositivos móveis.
+- **Acessibilidade:** Cores, botões e textos pensados para fácil leitura e interação.
 
 ---
 
@@ -88,10 +157,14 @@ void loop() {
 
 ---
 
-## Observações
+## Observações Técnicas
 
 - O sistema suporta até 3 slots de medicamentos por padrão.
 - Para aumentar o número de slots, ajuste o backend e o frontend conforme necessário.
+- O servidor salva os dados dos slots em `slots.json` para persistência.
+- O campo `slot` é enviado ao frontend para facilitar a identificação.
+- O campo `notificado` é usado internamente para evitar acionamentos duplicados.
+- O sistema é thread-safe usando locks para acesso aos slots.
 - A integração com Raspberry Pi pode ser feita de forma semelhante, adaptando o código de hardware.
 
 ---

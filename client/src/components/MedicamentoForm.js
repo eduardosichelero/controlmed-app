@@ -27,7 +27,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
     <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out">
       {/* Ícone e título */}
       <div className="flex items-center justify-between mb-4">
-        <div className="rounded-full p-4 bg-blue-50 text-blue-500 flex items-center justify-center">
+        <div className="rounded-full p-4 bg-blue-50 text-blue-500 flex items-center justify-center shadow">
           <Icon name="medication" className="text-3xl" />
         </div>
       </div>

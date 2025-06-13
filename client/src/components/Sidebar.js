@@ -8,14 +8,14 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Botão menu hambúrguer visível apenas em telas pequenas */}
+      {/* Botão menu hambúrguer visível apenas em telas pequenas, agora no canto inferior direito */}
       <button
-        className="fixed top-3 left-3 z-50 bg-blue-100 p-2 rounded-lg shadow-lg md:hidden"
+        className="fixed bottom-4 right-4 z-50 bg-blue-100 p-3 rounded-full shadow-lg md:hidden"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Fechar menu" : "Abrir menu"}
         type="button"
       >
-        <Icon name={open ? "close" : "menu"} className="text-2xl text-blue-700" />
+        <Icon name={open ? "close" : "menu"} className="text-3xl text-blue-700" />
       </button>
 
       {/* Sidebar como menu superior em telas pequenas, lateral em desktop */}
@@ -30,14 +30,16 @@ export default function Sidebar() {
         style={{ minWidth: "0" }}
       >
         {/* Topo: Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 md:py-7 md:px-6">
-          <div>
-            <div className="font-extrabold text-2xl md:text-3xl text-blue-700 tracking-wide">
+        <div className="px-6 py-5 md:py-7 md:px-6">
+          <div className="flex items-center gap-2">
+            <Icon name="pill" className="text-3xl text-blue-500 bg-blue-50 rounded-full p-1 shadow" />
+            <span className="font-extrabold text-2xl md:text-3xl text-blue-700 tracking-wide drop-shadow-sm">
               ControlMed
-            </div>
-            <div className="text-xs text-blue-400 font-medium">
-              Controle de Medicamentos
-            </div>
+            </span>
+          </div>
+          {/* Subtítulo abaixo do principal */}
+          <div className="text-xs text-blue-400 font-medium mt-1 ml-1">
+            Controle de Medicamentos
           </div>
         </div>
         {/* Menu */}
@@ -47,11 +49,13 @@ export default function Sidebar() {
               to="/dashboard"
               className={`flex items-center gap-3 px-5 py-3 rounded-xl font-bold shadow-sm hover:scale-105 transition
                 ${location.pathname === "/dashboard" ? "bg-gradient-to-r from-violet-100 to-blue-100 text-blue-900" : "hover:bg-blue-50 text-blue-700"}
-              `}
+                `}
               onClick={() => setOpen(false)}
             >
-              <Icon name="dashboard" className="text-2xl" />
-              <span className="hidden sm:inline md:inline">Dashboard</span>
+              <span className="flex items-center gap-2">
+                <Icon name="dashboard" className="text-2xl" />
+                Dashboard
+              </span>
             </Link>
           </li>
           <li>
@@ -59,11 +63,13 @@ export default function Sidebar() {
               to="/medicamentos"
               className={`flex items-center gap-3 px-5 py-3 rounded-xl font-semibold hover:scale-105 transition
                 ${location.pathname === "/medicamentos" ? "bg-gradient-to-r from-violet-100 to-blue-100 text-blue-900" : "hover:bg-blue-50 text-blue-700"}
-              `}
+                `}
               onClick={() => setOpen(false)}
             >
-              <Icon name="medication" className="text-2xl" />
-              <span className="hidden sm:inline md:inline">Medicamentos</span>
+              <span className="flex items-center gap-2">
+                <Icon name="medication" className="text-2xl" />
+                Medicamentos
+              </span>
             </Link>
           </li>
           <li>
@@ -71,11 +77,13 @@ export default function Sidebar() {
               to="/medicamentos-comuns"
               className={`flex items-center gap-3 px-5 py-3 rounded-xl font-semibold hover:scale-105 transition
                 ${location.pathname === "/medicamentos-comuns" ? "bg-gradient-to-r from-violet-100 to-blue-100 text-blue-900" : "hover:bg-blue-50 text-blue-700"}
-              `}
+                `}
               onClick={() => setOpen(false)}
             >
-              <Icon name="medical_services" className="text-2xl" />
-              <span>Medicamentos Comuns</span>
+              <span className="flex items-center gap-2">
+                <Icon name="medical_services" className="text-2xl" />
+                Medicamentos Comuns
+              </span>
             </Link>
           </li>
           <li>
@@ -83,11 +91,13 @@ export default function Sidebar() {
               to="/cadastrar"
               className={`flex items-center gap-3 px-5 py-3 rounded-xl font-semibold hover:scale-105 transition
                 ${location.pathname === "/cadastrar" ? "bg-gradient-to-r from-violet-100 to-blue-100 text-blue-900" : "hover:bg-blue-50 text-blue-700"}
-              `}
+                `}
               onClick={() => setOpen(false)}
             >
-              <Icon name="add_circle" className="text-2xl" />
-              <span className="hidden sm:inline md:inline">Cadastrar</span>
+              <span className="flex items-center gap-2">
+                <Icon name="add_circle" className="text-2xl" />
+                Cadastrar
+              </span>
             </Link>
           </li>
           <li>
@@ -95,11 +105,13 @@ export default function Sidebar() {
               to="/estatisticas"
               className={`flex items-center gap-3 px-5 py-3 rounded-xl font-semibold hover:scale-105 transition
                 ${location.pathname === "/estatisticas" ? "bg-gradient-to-r from-violet-100 to-blue-100 text-blue-900" : "hover:bg-blue-50 text-blue-700"}
-              `}
+                `}
               onClick={() => setOpen(false)}
             >
-              <Icon name="bar_chart" className="text-2xl" />
-              <span className="hidden sm:inline md:inline">Estatísticas</span>
+              <span className="flex items-center gap-2">
+                <Icon name="bar_chart" className="text-2xl" />
+                Estatísticas
+              </span>
             </Link>
           </li>
         </ul>

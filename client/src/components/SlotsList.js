@@ -9,6 +9,7 @@ export default function SlotsList({ slots, onRemove }) {
           key={i}
           slot={slot}
           onRemove={() => onRemove(i)}
+          slotIndex={i} // <-- Adicione esta linha
         />
       ))}
     </div>

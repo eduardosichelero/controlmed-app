@@ -4,16 +4,22 @@ import { useNavigate } from "react-router-dom";
 
 function formatarDataHorario(horario) {
   if (!horario) return "";
-  // Espera formato: "YYYY-MM-DD HH:mm" ou "YYYY-MM-DDTHH:mm"
   const [data, hora] = horario.split(/[ T]/);
   if (!data || !hora) return horario;
   const [ano, mes, dia] = data.split("-");
   return `${dia}/${mes}/${ano} ${hora}`;
 }
 
-export default function MedicamentoCard({ slot, onRemove }) {
+// Defina cores e rótulos para cada slot
+const slotColors = [
+  { icon: "text-blue-600 bg-blue-100", label: "Slot 1" },
+  { icon: "text-green-600 bg-green-100", label: "Slot 2" },
+  { icon: "text-yellow-600 bg-yellow-100", label: "Slot 3" },
+];
+
+export default function MedicamentoCard({ slot, onRemove, slotIndex = 0 }) {
   const navigate = useNavigate();
-  const iconColor = "text-blue-500 bg-blue-50";
+  const color = slotColors[slotIndex % slotColors.length];
 
   function handleClick() {
     if (!slot.nome) {
@@ -25,14 +31,17 @@ export default function MedicamentoCard({ slot, onRemove }) {
 
   return (
     <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg">
-      {/* Ícone */}
+      {/* Slot label e ícone */}
       <div className="flex items-center justify-between mb-3">
         <div
-          className={`rounded-full p-3 text-blue-600 bg-blue-50 flex items-center justify-center`}
+          className={`rounded-full p-3 ${color.icon} flex items-center justify-center`}
           aria-hidden="true"
         >
-          <Icon name="medication" className="text-2xl" />
+          <Icon name="pill" className="text-2xl" />
         </div>
+        <span className="ml-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-bold shadow-sm select-none">
+          {color.label}
+        </span>
       </div>
       {/* Conteúdo */}
       <div className="mb-1">

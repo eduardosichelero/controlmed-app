@@ -60,8 +60,8 @@ export default function MedicamentosComunsPage() {
   }
 
   return (
-    <div className="w-full flex flex-col items-center px-2 sm:px-4 md:px-8 py-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-extrabold text-blue-800 mb-8 tracking-tight drop-shadow-sm">
+    <div className="w-full flex flex-col items-center px-2 sm:px-4 md:px-8 py-8 min-h-screen">
+      <h1 className="text-3xl font-extrabold text-blue-800 mb-4 tracking-tight drop-shadow-sm">
         Medicamentos Comuns
       </h1>
       <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
