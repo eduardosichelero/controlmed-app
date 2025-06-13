@@ -3,14 +3,13 @@ import Icon from "./Icon";
 
 function formatarDataHorario(horario) {
   if (!horario) return "";
-  // Espera formato: "YYYY-MM-DD HH:mm" ou "YYYY-MM-DDTHH:mm"
   const [data, hora] = horario.split(/[ T]/);
   if (!data || !hora) return horario;
   const [ano, mes, dia] = data.split("-");
   return `${dia}/${mes}/${ano} ${hora}`;
 }
 
-export default function EstatisticasCard({ slots }) {
+export default function EstatisticasCard({ slots, children }) {
   const total = slots.filter(s => s.nome).length;
   const proximos = slots
     .filter(s => s.nome && s.horario)
@@ -55,6 +54,7 @@ export default function EstatisticasCard({ slots }) {
             : "Nenhum horário agendado"}
         </div>
       </div>
+      {children && <div className="mt-6">{children}</div>}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function getProximoMedicamento(slots) {
   const agora = new Date();
@@ -51,6 +52,7 @@ function formatDataHorario(horarioObj) {
 export default function BannerProximoMedicamento({ slots }) {
   const [countdown, setCountdown] = useState("");
   const [proximo, setProximo] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function update() {
@@ -100,7 +102,10 @@ export default function BannerProximoMedicamento({ slots }) {
               "Cadastre um medicamento para ver o cronômetro."
             )}
           </p>
-          <button className="border border-white text-white font-semibold px-4 sm:px-6 py-2 rounded-lg hover:bg-white/10 transition text-sm sm:text-base">
+          <button
+            className="border border-white text-white font-semibold px-4 sm:px-6 py-2 rounded-lg hover:bg-white/10 transition text-sm sm:text-base"
+            onClick={() => navigate("/medicamentos")}
+          >
             Ver todos
           </button>
         </div>
