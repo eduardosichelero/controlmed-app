@@ -56,32 +56,36 @@ export default function MedicamentosComunsPage() {
   const navigate = useNavigate();
 
   function handleCadastrar(nome) {
-    // Redireciona para a tela de cadastro já preenchendo o nome via query string
     navigate(`/cadastrar?nome=${encodeURIComponent(nome)}`);
   }
 
   return (
-    <div className="w-full flex flex-col items-center px-2 sm:px-4 md:px-8 py-6">
-      <h1 className="text-2xl font-bold text-blue-700 mb-4">Medicamentos Comuns</h1>
-      <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="w-full flex flex-col items-center px-2 sm:px-4 md:px-8 py-8 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-extrabold text-blue-800 mb-8 tracking-tight drop-shadow-sm">
+        Medicamentos Comuns
+      </h1>
+      <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {medicamentosComuns.map((med, idx) => (
           <div
             key={idx}
-            className="rounded-xl border border-gray-200 bg-white p-6 shadow flex flex-col min-h-[220px]"
+            className="rounded-2xl border border-blue-100 bg-white p-6 shadow-md flex flex-col min-h-[240px] transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg"
           >
-            <div className="font-semibold text-xl text-blue-800 mb-1">{med.nome}</div>
-            <div className="text-gray-600 text-base mb-2">{med.descricao}</div>
-            <div className="text-gray-800 text-base">
-              <span className="font-medium">Dosagem:</span> {med.dosagem}
+            <div className="font-bold text-lg text-blue-700 mb-2">{med.nome}</div>
+            <div className="text-gray-700 text-base mb-2">{med.descricao}</div>
+            <div className="text-gray-800 text-base mb-1">
+              <span className="font-semibold">Dosagem:</span> {med.dosagem}
             </div>
             <div className="text-gray-800 text-base mb-4">
-              <span className="font-medium">Apresentação:</span> {med.apresentacao}
+              <span className="font-semibold">Apresentação:</span> {med.apresentacao}
             </div>
             <button
-              className="mt-auto bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-2 rounded-lg transition"
+              className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition"
               onClick={() => handleCadastrar(med.nome)}
               type="button"
             >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
               Cadastrar este medicamento
             </button>
           </div>

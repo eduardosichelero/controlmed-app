@@ -24,11 +24,11 @@ export default function MedicamentoCard({ slot, onRemove }) {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 w-full max-w-lg shadow-sm flex flex-col relative">
+    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg">
       {/* Ícone */}
       <div className="flex items-center justify-between mb-3">
         <div
-          className={`rounded-full p-3 ${iconColor} flex items-center justify-center`}
+          className={`rounded-full p-3 text-blue-600 bg-blue-50 flex items-center justify-center`}
           aria-hidden="true"
         >
           <Icon name="medication" className="text-2xl" />
@@ -36,7 +36,7 @@ export default function MedicamentoCard({ slot, onRemove }) {
       </div>
       {/* Conteúdo */}
       <div className="mb-1">
-        <div className="font-semibold text-lg md:text-xl text-gray-900" tabIndex={0}>
+        <div className="font-bold text-lg md:text-xl text-blue-700" tabIndex={0}>
           {slot.nome || <span className="text-gray-400">Vazio</span>}
         </div>
         <div className="text-gray-700 text-base md:text-lg" tabIndex={0}>
@@ -59,16 +59,27 @@ export default function MedicamentoCard({ slot, onRemove }) {
       </div>
       {/* Botão */}
       <button
-        className={`mt-3 w-full font-semibold py-2 rounded-xl transition text-base
+        className={`mt-4 w-full font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition text-base
           ${slot.nome
             ? "bg-red-100 hover:bg-red-200 text-red-700"
-            : "bg-gray-100 hover:bg-gray-200 text-gray-900"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
           }`}
         onClick={handleClick}
         aria-label={slot.nome ? `Remover medicamento ${slot.nome}` : "Adicionar medicamento"}
         disabled={!!slot.nome && !onRemove}
+        type="button"
       >
-        {slot.nome ? "Remover" : "Adicionar"}
+        {slot.nome ? (
+          <>
+            <Icon name="delete" className="text-lg" />
+            Remover
+          </>
+        ) : (
+          <>
+            <Icon name="add" className="text-lg" />
+            Adicionar
+          </>
+        )}
       </button>
     </div>
   );

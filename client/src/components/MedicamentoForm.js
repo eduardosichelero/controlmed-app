@@ -24,7 +24,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 w-full max-w-lg shadow-sm flex flex-col relative">
+    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out">
       {/* Ícone e título */}
       <div className="flex items-center justify-between mb-4">
         <div className="rounded-full p-4 bg-blue-50 text-blue-500 flex items-center justify-center">
@@ -32,7 +32,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
         </div>
       </div>
       <div className="mb-2">
-        <h1 className="font-semibold text-2xl text-gray-900" tabIndex={0}>
+        <h1 className="font-semibold text-2xl text-blue-800" tabIndex={0}>
           Cadastrar Medicamento
         </h1>
         <p className="text-gray-500 text-base" tabIndex={0}>
@@ -140,7 +140,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
         </div>
         <button
           type="submit"
-          className="mt-4 w-full bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-150 ease-out flex items-center justify-center gap-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           aria-label="Cadastrar medicamento"
         >
           <Icon name="add_circle" /> Cadastrar
