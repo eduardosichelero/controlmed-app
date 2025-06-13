@@ -128,6 +128,7 @@ export default function ControleMedicamentos() {
     }
   };
 
+  // Altere a função removerMedicamento para usar setMessage e esconder após 5 segundos
   const removerMedicamento = async (slotIdx) => {
     if (!window.confirm("Tem certeza que deseja remover este medicamento?")) return;
     try {
@@ -137,8 +138,11 @@ export default function ControleMedicamentos() {
       if (!response.ok) throw new Error("Erro ao remover medicamento");
       await fetchSlots();
       setMessage("Medicamento removido com sucesso!");
+      // Esconde a mensagem após 5 segundos
+      setTimeout(() => setMessage(""), 5000);
     } catch (error) {
       setMessage("Erro ao remover medicamento.");
+      setTimeout(() => setMessage(""), 5000);
     }
   };
 
@@ -168,38 +172,15 @@ export default function ControleMedicamentos() {
       const agoraStr = `${ano}-${mes}-${dia} ${hora}:${minuto}`;
 
       const proximo = data.find(
-        (slot) =>
-          slot &&
-          slot.horario &&
-          slot.horario === agoraStr &&
-          !slot.notificado &&
-          !alertasDesligados[slot.horario]
+        (slot) => {
+          if (!slot || !slot.horario || !slot.nome || slot.notificado || alertasDesligados[slot.horario]) return false;
+          const slotDate = new Date(slot.horario.replace(" ", "T"));
+          const diff = Math.abs(slotDate.getTime() - agora.getTime());
+          return diff < 2000; // diferença menor que 2 segundos
+        }
       );
       if (proximo && proximo.nome) {
         setLembrete(proximo);
-
-        if (!alertasEnviados[proximo.horario]) {
-          try {
-            const slotIndex = data.findIndex(
-              s => s.nome === proximo.nome && s.horario === proximo.horario
-            );
-            await fetch("http://localhost:5000/alerta-medicamento", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                slot: slotIndex + 1,
-                nome: proximo.nome,
-                horario: proximo.horario,
-              }),
-            });
-            setAlertasEnviados(prev => ({
-              ...prev,
-              [proximo.horario]: true,
-            }));
-          } catch (error) {
-            // Erro ao enviar alerta ao servidor
-          }
-        }
       } else {
         setLembrete(null);
       }
@@ -208,7 +189,7 @@ export default function ControleMedicamentos() {
     return () => clearInterval(interval);
   }, [alertasEnviados, alertasDesligados]);
 
-  const desligarAlerta = (horario) => {
+  const desligarAlerta = async (horario) => {
     setLembrete(null);
     setAlertasDesligados(prev => ({
       ...prev,
@@ -216,11 +197,30 @@ export default function ControleMedicamentos() {
     }));
     setAlertaDesligadoMsg(true);
     setTimeout(() => setAlertaDesligadoMsg(false), 2000);
+
+    // Descobre o slot correspondente ao horário do lembrete
+    const slotIndex = slots.findIndex(
+      s => s && s.horario === horario
+    );
+    if (slotIndex !== -1) {
+      await fetch("http://localhost:5000/desligar-alerta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slot: slotIndex + 1 })
+      });
+      await fetchSlots();
+    }
+
+    setAlertasEnviados(prev => {
+      const novo = { ...prev };
+      delete novo[horario];
+      return novo;
+    });
   };
 
-  // Esconde automaticamente a mensagem de sucesso após 5 segundos
+  // O useEffect para esconder mensagem de sucesso pode ser simplificado para esconder qualquer mensagem após 5 segundos:
   useEffect(() => {
-    if (message === "Medicamento cadastrado/atualizado com sucesso!") {
+    if (message) {
       const timer = setTimeout(() => setMessage(""), 5000);
       return () => clearTimeout(timer);
     }
