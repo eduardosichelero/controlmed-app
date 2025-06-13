@@ -17,17 +17,17 @@ export default function EstatisticasCard({ slots, children }) {
     .sort();
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-white p-6 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out">
-      <div className="flex items-center justify-between mb-4">
+    <div className="rounded-2xl border border-blue-100 bg-white p-4 sm:p-6 w-full max-w-6xl min-w-[280px] shadow-md flex flex-col relative transition-all duration-150 ease-out mx-auto">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="rounded-full p-4 bg-green-50 text-green-500 flex items-center justify-center shadow">
           <Icon name="bar_chart" className="text-3xl sm:text-4xl" />
         </div>
       </div>
       <div className="mb-2">
-        <div className="font-extrabold text-2xl md:text-3xl text-blue-800">
+        <div className="font-extrabold text-2xl md:text-3xl text-blue-800 break-words">
           Estatísticas
         </div>
-        <div className="text-gray-500 text-base">
+        <div className="text-gray-500 text-base break-words">
           Resumo dos medicamentos cadastrados
         </div>
       </div>
@@ -42,8 +42,8 @@ export default function EstatisticasCard({ slots, children }) {
               <span className="font-semibold text-blue-700">Próximos horários:</span>
               <ul className="list-disc ml-5 mt-1 space-y-1">
                 {proximos.map((h, i) => (
-                  <li key={i} className="text-base">
-                    <span className="font-bold text-green-700 bg-green-100 px-2 py-1 rounded">
+                  <li key={i} className="text-base break-words max-w-full">
+                    <span className="font-bold text-green-700 bg-green-100 px-2 py-1 rounded inline-block break-all">
                       {formatarDataHorario(h)}
                     </span>
                   </li>
@@ -55,7 +55,14 @@ export default function EstatisticasCard({ slots, children }) {
           )}
         </div>
       </div>
-      {children && <div className="mt-6">{children}</div>}
+      {/* Cards filhos adaptáveis e responsivos */}
+      {children && (
+        <div className="mt-6 flex flex-wrap gap-4 w-full">
+          {React.Children.map(children, (child) => (
+            <div className="flex-1 min-w-[180px] max-w-full">{child}</div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

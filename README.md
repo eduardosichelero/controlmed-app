@@ -2,6 +2,10 @@
 
 Aplicação para controle de medicamentos, com interface web moderna (React + Tailwind CSS) e backend Python (Flask), integrável a dispositivos IoT como Arduino ou Raspberry Pi.
 
+## Fluxo de Comunicação
+
+![Fluxo de Comunicação](./assets/fluxo.png)
+
 ## Funcionalidades
 
 - Cadastro e remoção de medicamentos em até 3 slots físicos
@@ -96,10 +100,6 @@ void loop() {
 - Os dados dos slots são salvos em `slots.json` no backend.
 - Para aumentar o número de slots, ajuste o backend e o frontend conforme necessário.
 - Consulte o arquivo `DOCS.md` para detalhes completos de rotas, exemplos de uso e integração.
-
-## Licença
-
-ISC
 
 ---
 

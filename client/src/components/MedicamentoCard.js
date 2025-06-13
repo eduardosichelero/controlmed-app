@@ -30,25 +30,25 @@ export default function MedicamentoCard({ slot, onRemove, slotIndex = 0 }) {
   }
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg">
+    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full min-w-[180px] max-w-full shadow-md flex flex-col relative transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg">
       {/* Slot label e ícone */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
         <div
           className={`rounded-full p-3 ${color.icon} flex items-center justify-center`}
           aria-hidden="true"
         >
           <Icon name="pill" className="text-2xl" />
         </div>
-        <span className="ml-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-bold shadow-sm select-none">
+        <span className="ml-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-bold shadow-sm select-none break-all">
           {color.label}
         </span>
       </div>
       {/* Conteúdo */}
       <div className="mb-1">
-        <div className="font-bold text-lg md:text-xl text-blue-700" tabIndex={0}>
+        <div className="font-bold text-lg md:text-xl text-blue-700 break-words" tabIndex={0}>
           {slot.nome || <span className="text-gray-400">Vazio</span>}
         </div>
-        <div className="text-gray-700 text-base md:text-lg" tabIndex={0}>
+        <div className="text-gray-700 text-base md:text-lg break-words" tabIndex={0}>
           {slot.horario ? (
             <span>
               <span className="font-semibold">Horário:&nbsp;</span>

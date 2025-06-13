@@ -24,18 +24,18 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
   }
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full max-w-lg shadow-md flex flex-col relative transition-all duration-150 ease-out">
+    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full min-w-[260px] max-w-2xl shadow-md flex flex-col relative transition-all duration-150 ease-out mx-auto">
       {/* Ícone e título */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="rounded-full p-4 bg-blue-50 text-blue-500 flex items-center justify-center shadow">
           <Icon name="medication" className="text-3xl" />
         </div>
       </div>
       <div className="mb-2">
-        <h1 className="font-semibold text-2xl text-blue-800" tabIndex={0}>
+        <h1 className="font-semibold text-2xl text-blue-800 break-words" tabIndex={0}>
           Cadastrar Medicamento
         </h1>
-        <p className="text-gray-500 text-base" tabIndex={0}>
+        <p className="text-gray-500 text-base break-words" tabIndex={0}>
           Preencha os dados para agendar a liberação
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
             id="nome"
             placeholder="Ex: Paracetamol"
             required
-            className="w-full border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2 bg-gray-50 text-lg outline-none transition"
+            className="w-full border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2 bg-gray-50 text-lg outline-none transition break-words"
             value={form.nome}
             onChange={onChange}
             aria-label="Nome do medicamento"
