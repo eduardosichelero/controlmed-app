@@ -55,12 +55,17 @@ def monitorar_medicamentos():
             for i, slot in enumerate(slots):
                 if slot:
                     slot_time = datetime.strptime(slot['horario'], "%Y-%m-%d %H:%M")
-                    # Se o horário já passou e é recorrente, reagende
+                    # Se o horário já passou e é recorrente, reagende SOMENTE SE JÁ FOI NOTIFICADO E REMOVIDO
                     if slot.get('recorrente') and datetime.now() > slot_time:
-                        novo_horario = (slot_time + timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
-                        slots[i]['horario'] = novo_horario
-                        slots[i]['notificado'] = False
-                        salvar_slots()
+                        # Só reagenda se o alerta já foi desligado (notificado == False)
+                        if not slot.get('notificado'):
+                            # Só reagenda se já passou 30 segundos após o horário
+                            if (datetime.now() - slot_time).total_seconds() > 15:
+                                novo_horario = (slot_time + timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
+                                slots[i]['horario'] = novo_horario
+                                slots[i]['notificado'] = False
+                                salvar_slots()
+                        continue  # Não remove slot recorrente!
                     # Notifica se for o horário exato
                     elif slot['horario'] == agora and not slot.get('notificado'):
                         acionar_motor(slot['nome'])
@@ -116,19 +121,36 @@ def remover_medicamento(slot_idx):
 @app.route('/alerta-medicamento', methods=['POST'])
 def alerta_medicamento():
     data = request.json
+    print("Recebido em /alerta-medicamento:", data)  # <-- Adicione este log
     nome = data.get('nome')
     slot = data.get('slot')
     horario = data.get('horario')
     if not nome or not slot or not horario:
+        print("Dados incompletos recebidos!")  # <-- Log de erro
         return jsonify({"erro": "Dados incompletos"}), 400
     acionar_motor(nome)
-    # Marca o slot como notificado, se existir
     with lock:
         idx = int(slot) - 1
+        print(f"Buscando slot {idx} para notificar...")  # <-- Log
         if idx in [0, 1, 2] and slots[idx] and slots[idx]['nome'] == nome and slots[idx]['horario'] == horario:
             slots[idx]['notificado'] = True
             salvar_slots()
+            print(f"Slot {idx+1} notificado!")  # <-- Log
+        else:
+            print(f"Slot não encontrado ou dados divergentes: {slots[idx] if idx in [0,1,2] else 'idx inválido'}")  # <-- Log
     return jsonify({"mensagem": f"Alerta recebido e comando enviado para liberar '{nome}'."})
+
+@app.route('/desligar-alerta', methods=['POST'])
+def desligar_alerta():
+    data = request.json
+    horario = data.get('horario')
+    with lock:
+        for slot in slots:
+            if slot and slot['horario'] == horario:
+                slot['notificado'] = False
+                salvar_slots()
+                break
+    return jsonify({"mensagem": "Alerta desligado no backend"})
 
 if __name__ == '__main__':
     carregar_slots()

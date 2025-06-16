@@ -85,11 +85,17 @@ export default function ControleMedicamentos() {
     let dataCompleta = "";
     const hoje = new Date();
     if (form.dia === "hoje") {
-      dataCompleta = `${hoje.toISOString().slice(0, 10)} ${form.horario}`;
+      const ano = hoje.getFullYear();
+      const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+      const dia = String(hoje.getDate()).padStart(2, "0");
+      dataCompleta = `${ano}-${mes}-${dia} ${form.horario}`;
     } else if (form.dia === "amanha") {
       const amanha = new Date(hoje);
       amanha.setDate(hoje.getDate() + 1);
-      dataCompleta = `${amanha.toISOString().slice(0, 10)} ${form.horario}`;
+      const ano = amanha.getFullYear();
+      const mes = String(amanha.getMonth() + 1).padStart(2, "0");
+      const dia = String(amanha.getDate()).padStart(2, "0");
+      dataCompleta = `${ano}-${mes}-${dia} ${form.horario}`;
     } else if (form.dia === "data" && form.data_escolhida) {
       dataCompleta = `${form.data_escolhida} ${form.horario}`;
     } else {
@@ -175,8 +181,8 @@ export default function ControleMedicamentos() {
         (slot) => {
           if (!slot || !slot.horario || !slot.nome || slot.notificado || alertasDesligados[slot.horario]) return false;
           const slotDate = new Date(slot.horario.replace(" ", "T"));
-          const diff = Math.abs(slotDate.getTime() - agora.getTime());
-          return diff < 2000; // diferença menor que 2 segundos
+          // Mostra o lembrete se o horário já passou ou é agora, e não foi desligado
+          return slotDate <= agora;
         }
       );
       if (proximo && proximo.nome) {
@@ -198,24 +204,22 @@ export default function ControleMedicamentos() {
     setAlertaDesligadoMsg(true);
     setTimeout(() => setAlertaDesligadoMsg(false), 2000);
 
-    // Descobre o slot correspondente ao horário do lembrete
-    const slotIndex = slots.findIndex(
-      s => s && s.horario === horario
-    );
-    if (slotIndex !== -1) {
-      await fetch("http://localhost:5000/desligar-alerta", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slot: slotIndex + 1 })
-      });
-      await fetchSlots();
-    }
-
     setAlertasEnviados(prev => {
       const novo = { ...prev };
       delete novo[horario];
       return novo;
     });
+
+    // NOVO: avisa o backend que o alerta foi desligado
+    try {
+      await fetch("http://localhost:5000/desligar-alerta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ horario }),
+      });
+    } catch (e) {
+      // Se falhar, só ignora
+    }
   };
 
   // O useEffect para esconder mensagem de sucesso pode ser simplificado para esconder qualquer mensagem após 5 segundos:
