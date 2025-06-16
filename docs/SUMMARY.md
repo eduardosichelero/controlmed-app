@@ -1,6 +1,10 @@
-# Table of contents
+---
+icon: books
+---
 
-* [Introdução](README.md)
+# ContolMed
+
+* [Introdução](../)
 * [Instalação e configuração](instalacao-e-configuracao.md)
 * [API](api.md)
 * [Resumão](resumao.md)
