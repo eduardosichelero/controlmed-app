@@ -52,6 +52,17 @@ const medicamentosComuns = [
   },
 ];
 
+const cores = [
+  "from-blue-100 to-blue-50",
+  "from-violet-100 to-violet-50",
+  "from-green-100 to-green-50",
+  "from-yellow-100 to-yellow-50",
+  "from-pink-100 to-pink-50",
+  "from-cyan-100 to-cyan-50",
+  "from-orange-100 to-orange-50",
+  "from-emerald-100 to-emerald-50",
+];
+
 export default function MedicamentosComunsPage() {
   const navigate = useNavigate();
 
@@ -60,17 +71,25 @@ export default function MedicamentosComunsPage() {
   }
 
   return (
-    <div className="w-full flex flex-col items-center px-2 sm:px-4 md:px-8 py-8 min-h-screen">
-      <h1 className="text-3xl font-extrabold text-blue-800 mb-4 tracking-tight drop-shadow-sm">
-        Medicamentos Comuns
+    <div className="w-full flex flex-col items-center px-2 sm:px-4 md:px-8 py-8 min-h-screen bg-transparent">
+      <h1 className="text-4xl font-extrabold text-blue-800 mb-2 tracking-tight drop-shadow-sm text-center">
+        💊 Medicamentos Comuns
       </h1>
+      <p className="text-lg text-blue-700 mb-8 text-center max-w-2xl">
+        Consulte abaixo os medicamentos mais utilizados e cadastre rapidamente no seu controle.
+      </p>
       <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {medicamentosComuns.map((med, idx) => (
           <div
             key={idx}
-            className="rounded-2xl border border-blue-100 bg-white p-6 shadow-md flex flex-col min-h-[240px] transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg"
+            className={`rounded-3xl border border-blue-100 bg-gradient-to-br ${cores[idx % cores.length]} p-6 shadow-md flex flex-col min-h-[260px] transition-all duration-150 ease-out hover:-translate-y-0.4 hover:shadow-lg relative overflow-hidden`}
           >
-            <div className="font-bold text-lg text-blue-700 mb-2">{med.nome}</div>
+            <div className="absolute right-4 top-4 opacity-10 text-7xl pointer-events-none select-none">
+              <span role="img" aria-label="med">{["💊","🩺","💉","🧪","🩹","🧬","🧴","🧫"][idx % 8]}</span>
+            </div>
+            <div className="font-bold text-2xl text-blue-800 mb-2 flex items-center gap-2">
+              {med.nome}
+            </div>
             <div className="text-gray-700 text-base mb-2">{med.descricao}</div>
             <div className="text-gray-800 text-base mb-1">
               <span className="font-semibold">Dosagem:</span> {med.dosagem}
@@ -79,7 +98,7 @@ export default function MedicamentosComunsPage() {
               <span className="font-semibold">Apresentação:</span> {med.apresentacao}
             </div>
             <button
-              className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg flex items-center justify-center gap-2 transition"
+              className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl flex items-center justify-center gap-2 transition shadow"
               onClick={() => handleCadastrar(med.nome)}
               type="button"
             >

@@ -175,7 +175,6 @@ export default function ControleMedicamentos() {
       const dia = String(agora.getDate()).padStart(2, "0");
       const hora = String(agora.getHours()).padStart(2, "0");
       const minuto = String(agora.getMinutes()).padStart(2, "0");
-      const agoraStr = `${ano}-${mes}-${dia} ${hora}:${minuto}`;
 
       const proximo = data.find(
         (slot) => {
