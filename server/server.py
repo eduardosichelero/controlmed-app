@@ -48,8 +48,16 @@ def acionar_motor(nome):
     else:
         print("[MOTOR][ERRO] Arduino desconectado!")
 
+slots_foram_limpados = False  # Adiciona a flag global
+
 def monitorar_medicamentos():
+    global slots_foram_limpados
     while True:
+        if slots_foram_limpados:
+            # Pula este ciclo, não faz nada
+            slots_foram_limpados = False  # Reseta a flag para o próximo ciclo
+            time.sleep(5)
+            continue
         agora = datetime.now().strftime("%Y-%m-%d %H:%M")
         with lock:
             for i, slot in enumerate(slots):
@@ -117,6 +125,16 @@ def remover_medicamento(slot_idx):
         slots[slot_idx-1] = None
         salvar_slots()
     return jsonify({"mensagem": "Medicamento removido com sucesso!"})
+
+@app.route('/medicamentos', methods=['DELETE'])
+def limpar_todos_medicamentos():
+    global slots_foram_limpados
+    with lock:
+        global slots
+        slots = [None, None, None]
+        salvar_slots()
+        slots_foram_limpados = True  # Ativa a flag
+    return jsonify({"mensagem": "Todos os medicamentos foram removidos!"})
 
 @app.route('/alerta-medicamento', methods=['POST'])
 def alerta_medicamento():

@@ -10,36 +10,17 @@ function formatarDataHorario(horario) {
 }
 
 export default function EstatisticasCard({ slots, children }) {
-  const [historico, setHistorico] = useState(() => {
-    const salvo = localStorage.getItem("historico_medicamentos");
-    return salvo ? JSON.parse(salvo) : [];
-  });
-
-  useEffect(() => {
-    const novos = slots
-      .filter(s => s.nome && s.horario)
-      .map(s => ({
-        nome: s.nome,
-        horario: s.horario,
-        recorrente: !!s.recorrente,
-      }));
-
-    setHistorico(prev => {
-      const jaSalvos = new Set(prev.map(h => h.nome + h.horario));
-      const atualizados = [
-        ...prev,
-        ...novos.filter(n => !jaSalvos.has(n.nome + n.horario)),
-      ];
-      localStorage.setItem("historico_medicamentos", JSON.stringify(atualizados));
-      return atualizados;
-    });
-  }, [slots]);
-
   const total = slots.filter(s => s.nome).length;
   const proximos = slots
     .filter(s => s.nome && s.horario)
     .map(s => s.horario)
     .sort();
+
+  // Mostra os 3 últimos medicamentos cadastrados
+  const historico = slots
+    .filter(s => s.nome && s.horario)
+    .slice(-3)
+    .reverse();
 
   return (
     <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full max-w-6xl min-w-[280px] shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
@@ -86,11 +67,13 @@ export default function EstatisticasCard({ slots, children }) {
           <span className="font-semibold text-blue-700">Histórico de medicamentos:</span>
           {historico.length > 0 ? (
             <ul className="list-disc ml-5 mt-1 space-y-1">
-              {historico.slice(-3).map((item, idx) => (
+              {historico.map((item, idx) => (
                 <li key={idx} className="text-base break-words max-w-full">
-                  <span className="font-bold text-blue-700">{item.nome}</span>{" "}
+                  <span className="font-bold text-blue-700">{item.nome || "Sem nome"}</span>{" "}
                   <span className="text-gray-700">em</span>{" "}
-                  <span className="bg-blue-50 px-2 py-1 rounded">{formatarDataHorario(item.horario)}</span>
+                  <span className="bg-blue-50 px-2 py-1 rounded">
+                    {formatarDataHorario(item.horario || "")}
+                  </span>
                   {item.recorrente && (
                     <span className="ml-2 text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded">recorrente</span>
                   )}
