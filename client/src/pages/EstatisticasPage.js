@@ -48,8 +48,8 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
   }, [slots, limpouHistorico]);
 
   async function handleLimparHistorico() {
-    // Limpa no backend
-    await fetch("http://localhost:5000/medicamentos", { method: "DELETE" });
+    // Limpa no backend (Raspberry Pi)
+    await fetch("http://10.1.25.8:5000/medicamentos", { method: "DELETE" });
     // Limpa no localStorage
     localStorage.removeItem("historico_medicamentos");
     localStorage.setItem("limpou_historico", "true");

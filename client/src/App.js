@@ -34,7 +34,7 @@ export default function ControleMedicamentos() {
   const fetchSlots = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/medicamentos");
+      const response = await fetch("http://10.1.25.8:5000/medicamentos");
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       const paddedData = [...data];
@@ -81,7 +81,7 @@ export default function ControleMedicamentos() {
         setTimeout(() => setMessage(""), 3000); // 3 segundos
         return;
       }
-      await fetch(`http://localhost:5000/medicamentos/${form.slot}`, {
+      await fetch(`http://10.1.25.8:5000/medicamentos/${form.slot}`, {
         method: "DELETE",
       });
     }
@@ -108,7 +108,7 @@ export default function ControleMedicamentos() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/medicamentos", {
+      const response = await fetch("http://10.1.25.8:5000/medicamentos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -144,7 +144,7 @@ export default function ControleMedicamentos() {
   const removerMedicamento = async (slotIdx) => {
     if (!window.confirm("Tem certeza que deseja remover este medicamento?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/medicamentos/${slotIdx + 1}`, {
+      const response = await fetch(`http://10.1.25.8:5000/medicamentos/${slotIdx + 1}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Erro ao remover medicamento");
@@ -162,7 +162,7 @@ export default function ControleMedicamentos() {
     const interval = setInterval(async () => {
       let data = [];
       try {
-        const response = await fetch("http://localhost:5000/medicamentos");
+        const response = await fetch("http://10.1.25.8:5000/medicamentos");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         data = await response.json();
         const paddedData = [...data];
@@ -217,7 +217,7 @@ export default function ControleMedicamentos() {
 
     // NOVO: avisa o backend que o alerta foi desligado
     try {
-      await fetch("http://localhost:5000/desligar-alerta", {
+      await fetch("http://10.1.25.8:5000/desligar-alerta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ horario }),
