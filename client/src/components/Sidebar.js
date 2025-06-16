@@ -8,9 +8,9 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Botão menu hambúrguer visível apenas em telas pequenas, agora no canto inferior direito */}
+      {/* Botão menu hambúrguer visível apenas em telas menores que hd */}
       <button
-        className="fixed bottom-4 right-4 z-50 bg-blue-100 p-3 rounded-full shadow-lg md:hidden"
+        className="fixed bottom-4 right-4 z-50 bg-blue-100 p-3 rounded-full shadow-lg hd:hidden"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Fechar menu" : "Abrir menu"}
         type="button"
@@ -18,22 +18,22 @@ export default function Sidebar() {
         <Icon name={open ? "close" : "menu"} className="text-3xl text-blue-700" />
       </button>
 
-      {/* Sidebar como menu superior em telas pequenas, lateral em desktop */}
+      {/* Sidebar: menu superior em telas pequenas, lateral em HD ou maior */}
       <nav
         className={`
           fixed top-0 left-0 w-full z-40 bg-gradient-to-b from-blue-50 to-white border-b shadow-md flex flex-col
           transition-transform duration-300
           ${open ? "translate-y-0" : "-translate-y-full"}
-          md:static md:translate-y-0 md:w-64 md:min-h-screen md:h-screen md:border-b-0 md:border-r
-          md:flex-col
+          hd:static hd:translate-y-0 hd:w-64 hd:min-h-screen hd:h-screen hd:border-b-0 hd:border-r
+          hd:flex-col
         `}
         style={{ minWidth: "0" }}
       >
         {/* Topo: Logo */}
-        <div className="px-6 py-5 md:py-7 md:px-6">
+        <div className="px-6 py-5 hd:py-7 hd:px-6">
           <div className="flex items-center gap-2">
             <Icon name="pill" className="text-3xl text-blue-500 bg-blue-50 rounded-full p-1 shadow" />
-            <span className="font-extrabold text-2xl md:text-3xl text-blue-700 tracking-wide drop-shadow-sm">
+            <span className="font-extrabold text-2xl hd:text-3xl text-blue-700 tracking-wide drop-shadow-sm">
               ControlMed
             </span>
           </div>
@@ -43,7 +43,7 @@ export default function Sidebar() {
           </div>
         </div>
         {/* Menu */}
-        <ul className="space-y-2 px-2 mt-2 md:mt-2 md:px-2 flex flex-col md:block">
+        <ul className="space-y-2 px-2 mt-2 hd:mt-2 hd:px-2 flex flex-col hd:block">
           <li>
             <Link
               to="/dashboard"
@@ -115,8 +115,8 @@ export default function Sidebar() {
             </Link>
           </li>
         </ul>
-        {/* Usuário fixado na base (visível apenas em desktop) */}
-        <div className="hidden md:flex mt-auto px-6 py-6 border-t bg-white/60">
+        {/* Usuário fixado na base (visível apenas em HD ou maior) */}
+        <div className="hidden hd:flex mt-auto px-6 py-6 border-t bg-white/60">
           <div className="flex items-center gap-3">
             <span className="inline-block w-9 h-9 rounded-full bg-gradient-to-tr from-blue-400 to-violet-500 flex items-center justify-center text-white font-bold text-lg shadow">
               U
@@ -129,7 +129,7 @@ export default function Sidebar() {
       {/* Overlay para fechar o menu em mobile */}
       {open && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-30 z-30 hd:hidden"
           onClick={() => setOpen(false)}
           aria-label="Fechar menu"
         />

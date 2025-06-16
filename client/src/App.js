@@ -44,6 +44,7 @@ export default function ControleMedicamentos() {
       setSlots(paddedData.slice(0, 3));
     } catch (error) {
       setMessage("Erro ao carregar medicamentos. Tente novamente.");
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
     }
     setLoading(false);
   };
@@ -66,6 +67,7 @@ export default function ControleMedicamentos() {
     e.preventDefault();
     if (!form.slot) {
       setMessage("Por favor, selecione um slot.");
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
       return;
     }
     const slotIndex = parseInt(form.slot, 10) - 1;
@@ -76,6 +78,7 @@ export default function ControleMedicamentos() {
       );
       if (!confirmar) {
         setMessage("Cadastro cancelado.");
+        setTimeout(() => setMessage(""), 3000); // 3 segundos
         return;
       }
       await fetch(`http://localhost:5000/medicamentos/${form.slot}`, {
@@ -100,6 +103,7 @@ export default function ControleMedicamentos() {
       dataCompleta = `${form.data_escolhida} ${form.horario}`;
     } else {
       setMessage("Por favor, selecione o dia corretamente.");
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
       return;
     }
 
@@ -121,6 +125,7 @@ export default function ControleMedicamentos() {
 
       await fetchSlots();
       setMessage("Medicamento cadastrado/atualizado com sucesso!");
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
       setForm({
         slot: "",
         nome: "",
@@ -131,6 +136,7 @@ export default function ControleMedicamentos() {
       });
     } catch (error) {
       setMessage("Erro ao cadastrar medicamento. Tente novamente.");
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
     }
   };
 
@@ -144,11 +150,10 @@ export default function ControleMedicamentos() {
       if (!response.ok) throw new Error("Erro ao remover medicamento");
       await fetchSlots();
       setMessage("Medicamento removido com sucesso!");
-      // Esconde a mensagem após 5 segundos
-      setTimeout(() => setMessage(""), 5000);
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
     } catch (error) {
       setMessage("Erro ao remover medicamento.");
-      setTimeout(() => setMessage(""), 5000);
+      setTimeout(() => setMessage(""), 3000); // 3 segundos
     }
   };
 
@@ -167,6 +172,7 @@ export default function ControleMedicamentos() {
         setSlots(paddedData.slice(0, 3));
       } catch (error) {
         setMessage("Erro ao carregar medicamentos. Tente novamente.");
+        setTimeout(() => setMessage(""), 3000); // 3 segundos
       }
 
       const agora = new Date();
@@ -201,7 +207,7 @@ export default function ControleMedicamentos() {
       [horario]: true
     }));
     setAlertaDesligadoMsg(true);
-    setTimeout(() => setAlertaDesligadoMsg(false), 2000);
+    setTimeout(() => setAlertaDesligadoMsg(false), 3000); // 3 segundos
 
     setAlertasEnviados(prev => {
       const novo = { ...prev };
@@ -224,7 +230,7 @@ export default function ControleMedicamentos() {
   // O useEffect para esconder mensagem de sucesso pode ser simplificado para esconder qualquer mensagem após 5 segundos:
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(() => setMessage(""), 5000);
+      const timer = setTimeout(() => setMessage(""), 3000); // 3 segundos
       return () => clearTimeout(timer);
     }
   }, [message]);

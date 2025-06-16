@@ -71,16 +71,16 @@ export default function BannerProximoMedicamento({ slots }) {
   }
 
   return (
-    <div className="rounded-3xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-10 flex flex-col md:flex-row items-start md:items-center justify-between bg-gradient-to-r from-violet-700 via-blue-600 to-blue-400 relative overflow-hidden shadow-xl border-2 border-violet-200">
+    <div className="rounded-3xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-10 flex flex-col hd:flex-row items-start hd:items-center justify-between bg-gradient-to-r from-violet-700 via-blue-600 to-blue-400 relative overflow-hidden shadow-xl border-2 border-violet-200">
       {/* Badge Premium - agora com espaçamento */}
-      <span className="bg-white/20 text-white text-xs px-5 py-2 rounded-full font-semibold shadow-sm z-10 mb-4 sm:mb-8 md:mb-0 mr-0 md:mr-8 self-start tracking-wide backdrop-blur">
+      <span className="bg-white/20 text-white text-xs px-5 py-2 rounded-full font-semibold shadow-sm z-10 mb-4 sm:mb-8 hd:mb-0 mr-0 hd:mr-8 self-start tracking-wide backdrop-blur">
         Próxima dose
       </span>
       {/* Conteúdo principal e cronômetro lado a lado */}
-      <div className="z-10 flex-1 min-w-0 flex flex-col md:flex-row md:items-center md:gap-12 w-full">
+      <div className="z-10 flex-1 min-w-0 flex flex-col hd:flex-row hd:items-center hd:gap-12 w-full">
         {/* Texto principal */}
         <div className="flex-1 w-full">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2 break-words drop-shadow-lg">
+          <h2 className="text-2xl sm:text-3xl hd:text-4xl font-extrabold text-white mb-2 break-words drop-shadow-lg">
             {proximo
               ? `Próximo medicamento: ${proximo.nome}`
               : "Nenhum medicamento agendado"}
@@ -110,9 +110,9 @@ export default function BannerProximoMedicamento({ slots }) {
           </button>
         </div>
         {/* Cronômetro destacado */}
-        <div className="flex justify-center items-center mt-4 sm:mt-6 md:mt-0 w-full md:w-auto">
+        <div className="flex justify-center items-center mt-4 sm:mt-6 hd:mt-0 w-full hd:w-auto">
           <div
-            className="bg-white/90 text-violet-700 font-extrabold px-8 sm:px-12 py-4 sm:py-5 rounded-3xl shadow-2xl text-3xl sm:text-4xl md:text-5xl tracking-widest border-4 border-violet-300 focus:outline-none transition-all duration-200"
+            className="bg-white/90 text-violet-700 font-extrabold px-8 sm:px-12 py-4 sm:py-5 rounded-3xl shadow-2xl text-3xl sm:text-4xl hd:text-5xl tracking-widest border-4 border-violet-300 focus:outline-none transition-all duration-200"
             style={{
               letterSpacing: "0.18em",
               minWidth: "120px",
@@ -125,8 +125,8 @@ export default function BannerProximoMedicamento({ slots }) {
           </div>
         </div>
       </div>
-      {/* Círculos decorativos - escondidos em telas pequenas */}
-      <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none z-0">
+      {/* Círculos decorativos - escondidos em telas menores que hd */}
+      <div className="hidden hd:block absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none z-0">
         <div className="relative w-64 h-64">
           <div className="absolute inset-0 rounded-full bg-white/10"></div>
           <div className="absolute inset-8 rounded-full bg-white/10"></div>
