@@ -42,7 +42,14 @@ export default function MedicamentoCard({ slot, onRemove, slotIndex = 0 }) {
         >
           <Icon name="pill" className="text-2xl" />
         </div>
-        <span className="ml-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-bold shadow-sm select-none break-all">
+        <span
+          className={`ml-2 px-3 py-1 rounded-full text-xs font-bold shadow-sm select-none break-all
+            ${slot.nome
+              ? "bg-red-100 text-red-700 animate-pulse-slow"
+              : "bg-gray-100 text-gray-700"
+            }`
+          }
+        >
           {color.label}
         </span>
       </div>
