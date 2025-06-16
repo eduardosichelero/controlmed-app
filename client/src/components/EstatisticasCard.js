@@ -42,7 +42,10 @@ export default function EstatisticasCard({ slots, children }) {
     .sort();
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-white p-4 sm:p-6 w-full max-w-6xl min-w-[280px] shadow-md flex flex-col relative transition-all duration-150 ease-out mx-auto">
+    <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full max-w-6xl min-w-[280px] shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
+      <div className="absolute right-8 top-8 opacity-10 text-8xl pointer-events-none select-none">
+        <Icon name="bar_chart" className="text-blue-300 text-8xl" />
+      </div>
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="rounded-full p-4 bg-green-50 text-green-500 flex items-center justify-center shadow">
           <Icon name="bar_chart" className="text-3xl sm:text-4xl" />

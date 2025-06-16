@@ -30,11 +30,14 @@ export default function MedicamentoCard({ slot, onRemove, slotIndex = 0 }) {
   }
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full min-w-[180px] max-w-full shadow-md flex flex-col relative transition-all duration-150 ease-out hover:scale-102 hover:shadow-lg">
+    <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full min-w-[180px] max-w-full shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
+      <div className="absolute right-6 top-6 opacity-10 text-7xl pointer-events-none select-none">
+        <Icon name="pill" className="text-blue-300 text-7xl" />
+      </div>
       {/* Slot label e ícone */}
       <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
         <div
-          className={`rounded-full p-3 ${color.icon} flex items-center justify-center`}
+          className={`rounded-full p-3 ${color.icon} flex items-center justify-center shadow`}
           aria-hidden="true"
         >
           <Icon name="pill" className="text-2xl" />

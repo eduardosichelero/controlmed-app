@@ -24,22 +24,24 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
   }
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-white p-4 w-full min-w-[260px] max-w-2xl shadow-md flex flex-col relative transition-all duration-150 ease-out mx-auto">
-      {/* Ícone e título */}
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <div className="rounded-full p-4 bg-blue-50 text-blue-500 flex items-center justify-center shadow">
+    <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full min-w-[260px] max-w-2xl shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
+      <div className="absolute right-6 top-6 opacity-10 text-8xl pointer-events-none select-none">
+        <Icon name="medication" className="text-blue-300 text-8xl" />
+      </div>
+      <div className="flex items-center gap-4 mb-6">
+        <div className="rounded-full p-4 bg-blue-100 text-blue-500 flex items-center justify-center shadow">
           <Icon name="medication" className="text-3xl" />
         </div>
+        <div>
+          <h1 className="font-extrabold text-3xl text-blue-800 break-words" tabIndex={0}>
+            Cadastrar Medicamento
+          </h1>
+          <p className="text-gray-500 text-base break-words" tabIndex={0}>
+            Preencha os dados para agendar a liberação
+          </p>
+        </div>
       </div>
-      <div className="mb-2">
-        <h1 className="font-semibold text-2xl text-blue-800 break-words" tabIndex={0}>
-          Cadastrar Medicamento
-        </h1>
-        <p className="text-gray-500 text-base break-words" tabIndex={0}>
-          Preencha os dados para agendar a liberação
-        </p>
-      </div>
-      <form autoComplete="off" className="space-y-4 mt-2" onSubmit={handleSubmit}>
+      <form autoComplete="off" className="space-y-6 mt-2" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="slot" className="block font-medium mb-1 text-base">
             Slot:
@@ -48,7 +50,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
             name="slot"
             id="slot"
             required
-            className="w-full border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2 bg-gray-50 text-lg outline-none transition"
+            className="w-full border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2 bg-gray-50 text-lg outline-none transition shadow-sm"
             value={form.slot}
             onChange={onChange}
             aria-label="Selecione o slot do medicamento"
@@ -140,7 +142,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
         </div>
         <button
           type="submit"
-          className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-150 ease-out flex items-center justify-center gap-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="mt-6 w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-semibold py-3 rounded-xl transition-all duration-150 ease-out flex items-center justify-center gap-2 text-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           aria-label="Cadastrar medicamento"
         >
           <Icon name="add_circle" /> Cadastrar
