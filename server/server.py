@@ -7,11 +7,13 @@ from datetime import datetime, timedelta
 import json
 import os
 
+#4
+
 app = Flask(__name__)
 CORS(app)  # Permite requisições do React
 
 # Configurações do Arduino
-ARDUINO_PORT = 'COM3'  # Altere para sua porta
+ARDUINO_PORT = '/dev/ttyACM1'
 ARDUINO_BAUD = 9600
 
 slots = [None, None, None]
@@ -52,38 +54,30 @@ slots_foram_limpados = False  # Adiciona a flag global
 
 def monitorar_medicamentos():
     global slots_foram_limpados
+    print("[DEBUG] Monitoramento iniciado")
     while True:
-        if slots_foram_limpados:
-            # Pula este ciclo, não faz nada
-            slots_foram_limpados = False  # Reseta a flag para o próximo ciclo
-            time.sleep(5)
-            continue
+        print("[DEBUG] Loop monitoramento")
+        print("[DEBUG] Slots atuais:", slots)
         agora = datetime.now().strftime("%Y-%m-%d %H:%M")
+        print("[DEBUG] Agora:", agora)
         with lock:
             for i, slot in enumerate(slots):
                 if slot:
-                    slot_time = datetime.strptime(slot['horario'], "%Y-%m-%d %H:%M")
-                    # Se o horário já passou e é recorrente, reagende SOMENTE SE JÁ FOI NOTIFICADO E REMOVIDO
-                    if slot.get('recorrente') and datetime.now() > slot_time:
-                        # Só reagenda se o alerta já foi desligado (notificado == False)
-                        if not slot.get('notificado'):
-                            # Só reagenda se já passou 30 segundos após o horário
-                            if (datetime.now() - slot_time).total_seconds() > 15:
-                                novo_horario = (slot_time + timedelta(days=1)).strftime("%Y-%m-%d %H:%M")
-                                slots[i]['horario'] = novo_horario
-                                slots[i]['notificado'] = False
-                                salvar_slots()
-                        continue  # Não remove slot recorrente!
-                    # Notifica se for o horário exato
-                    elif slot['horario'] == agora and not slot.get('notificado'):
+                    print(f"[DEBUG] Checando slot {i}: {slot}")
+                    print(f"[DEBUG] slot['horario']: {slot['horario']} == agora: {agora}? {slot['horario'] == agora}")
+                    if slot['horario'] == agora and not slot.get('notificado'):
+                        print("[DEBUG] Condição para acionar_motor satisfeita!")
                         acionar_motor(slot['nome'])
-                        slots[i]['notificado'] = True
+                        # Ativa recorrência: se recorrente, agenda para o próximo dia
+                        if slot.get('recorrente'):
+                            dt = datetime.strptime(slot['horario'], "%Y-%m-%d %H:%M")
+                            proximo = dt + timedelta(days=1)
+                            slots[i]['horario'] = proximo.strftime("%Y-%m-%d %H:%M")
+                            slots[i]['notificado'] = False
+                            print(f"[DEBUG] Slot recorrente reagendado para {slots[i]['horario']}")
+                        else:
+                            slots[i]['notificado'] = True
                         salvar_slots()
-                    # Remove slot não recorrente 2 minutos depois
-                    elif slot.get('notificado') and not slot.get('recorrente') and slot['horario'] != agora:
-                        if (datetime.now() - slot_time).total_seconds() > 120:
-                            slots[i] = None
-                            salvar_slots()
         time.sleep(5)
 
 @app.route('/medicamentos', methods=['GET'])
@@ -93,7 +87,8 @@ def listar_medicamentos():
             {
                 "nome": slot.get("nome") if slot else None,
                 "horario": slot.get("horario") if slot else None,
-                "recorrente": slot.get("recorrente", False) if slot else False
+                "recorrente": slot.get("recorrente", False) if slot else False,
+                "notificado": slot.get("notificado", False) if slot else False,  # <-- Adicione esta linha
             }
             for slot in slots
         ])
@@ -175,3 +170,4 @@ if __name__ == '__main__':
     # Inicia o monitoramento dos medicamentos em thread separada
     threading.Thread(target=monitorar_medicamentos, daemon=True).start()
     app.run(host='0.0.0.0', port=5000)
+    print(slots)

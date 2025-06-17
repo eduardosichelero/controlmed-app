@@ -26,7 +26,6 @@ function formatarDataHorario(horario) {
 }
 
 export default function EstatisticasPage({ slots, fetchSlots }) {
-  // Carrega o estado de "limpou histórico" do localStorage
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [limpouHistorico, setLimpouHistorico] = useState(
     localStorage.getItem("limpou_historico") === "true"
@@ -34,23 +33,32 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
   const [historico, setHistorico] = useState(getHistoricoCompleto());
 
   useEffect(() => {
-    // Só salva no localStorage se não tiver limpado o histórico
     if (!limpouHistorico && slots && slots.length > 0) {
-      // Filtra apenas medicamentos válidos
-      const medicamentosValidos = slots.filter((s) => s && s.nome);
-      localStorage.setItem("historico_medicamentos", JSON.stringify(medicamentosValidos));
-      setHistorico(medicamentosValidos);
+      const medicamentosValidos = slots.filter((s) => s && s.nome && s.horario);
+      // Carrega o histórico atual
+      const historicoAtual = getHistoricoCompleto();
+      // Adiciona novos medicamentos que ainda não estão no histórico
+      let mudou = false;
+      medicamentosValidos.forEach((med) => {
+        if (!historicoAtual.some(h => h.nome === med.nome && h.horario === med.horario)) {
+          historicoAtual.push(med);
+          mudou = true;
+        }
+      });
+      if (mudou) {
+        localStorage.setItem("historico_medicamentos", JSON.stringify(historicoAtual));
+        setHistorico(historicoAtual);
+      } else {
+        setHistorico(historicoAtual);
+      }
     }
-    // Se limpou, garante que o histórico local fique vazio
     if (limpouHistorico) {
       setHistorico([]);
     }
   }, [slots, limpouHistorico]);
 
   async function handleLimparHistorico() {
-    // Limpa no backend (Raspberry Pi)
     await fetch("http://10.1.25.8:5000/medicamentos", { method: "DELETE" });
-    // Limpa no localStorage
     localStorage.removeItem("historico_medicamentos");
     localStorage.setItem("limpou_historico", "true");
     setHistorico([]);
@@ -58,7 +66,6 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
     if (typeof fetchSlots === "function") fetchSlots();
   }
 
-  // Se cadastrar um novo medicamento, reseta o estado de "limpou histórico"
   useEffect(() => {
     if (limpouHistorico && slots && slots.length > 0) {
       localStorage.setItem("limpou_historico", "false");
@@ -66,9 +73,12 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
     }
   }, [slots]);
 
-  const total = slots.filter((s) => s && s.nome).length;
-  const recorrentes = slots.filter((s) => s && s.recorrente).length;
-  const maisFrequente = getMedicamentoMaisFrequente(slots);
+  // Estatísticas
+  const medicamentosValidos = slots.filter((s) => s && s.nome);
+  const total = medicamentosValidos.length;
+  const recorrentes = medicamentosValidos.filter((s) => s.recorrente).length;
+  const maisFrequente = getMedicamentoMaisFrequente(medicamentosValidos);
+  const ultimo = medicamentosValidos.length > 0 ? medicamentosValidos[medicamentosValidos.length - 1] : null;
 
   const historicoExibido = (mostrarTodos ? historico : historico.slice(0, 5)).filter(item => item && item.nome);
 
@@ -80,7 +90,7 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
             <span className="text-3xl font-bold">{recorrentes}</span>
             <span className="mt-2 font-semibold">Recorrentes</span>
             <span className="text-xs mt-1">
-              {((recorrentes / total) * 100 || 0).toFixed(0)}% do total
+              {total > 0 ? ((recorrentes / total) * 100).toFixed(0) : 0}% do total
             </span>
           </div>
           <div className="flex-1 bg-green-100 text-green-900 rounded-lg px-4 py-6 flex flex-col items-center shadow">
@@ -89,11 +99,12 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
           </div>
           <div className="flex-1 bg-blue-50 text-blue-900 rounded-lg px-4 py-6 flex flex-col items-center shadow">
             <span className="text-lg font-bold">
-              {slots.length > 0 && slots[slots.length - 1]?.nome
-                ? slots[slots.length - 1].nome
-                : "Nenhum"}
+              {ultimo ? ultimo.nome : "Nenhum"}
             </span>
             <span className="mt-2 font-semibold">Último cadastrado</span>
+            <span className="text-xs mt-1">
+              {ultimo ? formatarDataHorario(ultimo.horario) : ""}
+            </span>
           </div>
         </div>
       </EstatisticasCard>

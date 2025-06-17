@@ -42,6 +42,17 @@ export default function ControleMedicamentos() {
         paddedData.push({ nome: "", horario: "", dia: "", data_escolhida: "" });
       }
       setSlots(paddedData.slice(0, 3));
+      const novosHorarios = paddedData.map(slot => slot && slot.horario).filter(Boolean);
+      setAlertasDesligados(prev => {
+        // Remove alertas desligados para horários que não existem mais (foram reagendados)
+        const atualizados = {};
+        for (const horario of novosHorarios) {
+          if (prev[horario]) {
+            atualizados[horario] = true;
+          }
+        }
+        return atualizados;
+      });
     } catch (error) {
       setMessage("Erro ao carregar medicamentos. Tente novamente.");
       setTimeout(() => setMessage(""), 3000); // 3 segundos
@@ -176,18 +187,25 @@ export default function ControleMedicamentos() {
       }
 
       const agora = new Date();
-      const ano = agora.getFullYear();
-      const mes = String(agora.getMonth() + 1).padStart(2, "0");
-      const dia = String(agora.getDate()).padStart(2, "0");
-      const hora = String(agora.getHours()).padStart(2, "0");
-      const minuto = String(agora.getMinutes()).padStart(2, "0");
+      console.log("Agora navegador:", agora.toISOString());
+      console.log("Slots recebidos:", data);
+      data.forEach(slot => {
+        if (slot && slot.horario) {
+          console.log("Slot:", slot.nome, "Horario:", slot.horario, "Date JS:", new Date(slot.horario.replace(" ", "T")).toISOString());
+        }
+      });
 
       const proximo = data.find(
         (slot) => {
-          if (!slot || !slot.horario || !slot.nome || slot.notificado || alertasDesligados[slot.horario]) return false;
+          if (!slot || !slot.horario || !slot.nome) return false;
           const slotDate = new Date(slot.horario.replace(" ", "T"));
-          // Mostra o lembrete se o horário já passou ou é agora, e não foi desligado
-          return slotDate <= agora;
+          return (
+            slotDate.getFullYear() === agora.getFullYear() &&
+            slotDate.getMonth() === agora.getMonth() &&
+            slotDate.getDate() === agora.getDate() &&
+            slotDate.getHours() === agora.getHours() &&
+            slotDate.getMinutes() === agora.getMinutes()
+          );
         }
       );
       if (proximo && proximo.nome) {
