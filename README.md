@@ -1,6 +1,4 @@
-# 💊 Introdução
-
-## 💊 ControlMed
+# 💊 ControlMed
 
 📚 [**Acesse a documentação completa no GitBook**](https://eduardos-organization-23.gitbook.io/controlmed/)
 
