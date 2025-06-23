@@ -213,7 +213,7 @@ export default function ControleMedicamentos() {
       } else {
         setLembrete(null);
       }
-    }, 5000);
+    }, 1000); // <-- Agora 1 segundo
 
     return () => clearInterval(interval);
   }, [alertasEnviados, alertasDesligados]);

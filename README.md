@@ -39,6 +39,46 @@ npm install
 npm start
 ```
 Certifique-se de que o backend está rodando em http://localhost:5000.
+## 🛠️ Script de inicialização rápida e ajuste de horário
+
+Para facilitar o início do sistema e garantir que tudo está sincronizado, siga este passo a passo ou utilize um script como exemplo:
+
+### Exemplo de script: `ajustaHora.sh`
+
+```bash
+#!/bin/bash
+
+# 1. Ajusta a data e hora para o dia de hoje e hora atual
+sudo date -s "$(date '+%Y-%m-%d %H:%M:00')"
+
+# 2. Acesse a pasta do servidor
+cd ~/Desktop/servidor
+
+# 3. Ative o ambiente virtual
+source venv/bin/activate
+
+# 4. Entre na pasta do backend
+cd server
+
+# 5. Rode o servidor Flask
+python server.py
+```
+
+---
+
+### Checklist rápido antes de rodar
+
+- **Verifique se o Arduino está conectado na porta preta de cima.**
+- **Descubra a porta do Arduino:**
+  ```bash
+  ls /dev/ttyACM*
+  ```
+- **Ajuste a porta correta no arquivo `server.py`:**
+  ```python
+  ARDUINO_PORT = '/dev/ttyACM0'  # ou /dev/ttyACM1, conforme o resultado do comando acima
+  ```
+
+---
 
 ## 🚀 Explore mais
 

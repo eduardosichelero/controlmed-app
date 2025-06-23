@@ -117,9 +117,7 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
           </div>
           <div className="text-gray-600 text-base mb-4">
             Aqui você encontra todos os medicamentos já cadastrados no sistema,
-            incluindo recorrentes e não recorrentes. Use este histórico para
-            acompanhar sua rotina, conferir horários passados e manter seu
-            controle sempre atualizado.
+            incluindo recorrentes e não recorrentes.
           </div>
           {historico.length > 0 ? (
             <>
@@ -143,7 +141,7 @@ export default function EstatisticasPage({ slots, fetchSlots }) {
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                      <span className="text-gray-500 text-sm">Horário:</span>
+                      <span className="text-gray-500 text-sm">Data e Hora:</span>
                       <span className="bg-blue-50 text-blue-900 px-3 py-1 rounded-lg font-mono font-semibold shadow-sm">
                         {formatarDataHorario(item.horario)}
                       </span>

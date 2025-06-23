@@ -78,7 +78,7 @@ def monitorar_medicamentos():
                         else:
                             slots[i]['notificado'] = True
                         salvar_slots()
-        time.sleep(5)
+        time.sleep(1)
 
 @app.route('/medicamentos', methods=['GET'])
 def listar_medicamentos():
