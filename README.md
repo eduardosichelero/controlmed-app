@@ -16,7 +16,7 @@ Bem-vindo ao **ControlMed**, um sistema inteligente para controle e liberação 
 
 * Funcionalidades principais
 * Instalação rápida
-* 🚀 Explore mais
+* Explore mais
 * Integrantes do Projeto
 
 ***
