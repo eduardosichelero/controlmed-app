@@ -1,7 +1,3 @@
----
-icon: book-open
----
-
 # 💊 Introdução
 
 ## 💊 ControlMed
@@ -92,7 +88,7 @@ python server.py
 
 ### 🚀 Explore mais
 
-* **Como instalar e configurar:** Veja instruções detalhadas na [documentação do GitBook](https://app.gitbook.com/o/JOLSSr7mpzIMl25heEI3/s/hpLd9RAZLPID0bwpwk1c/instalacao).
+* **Como instalar e configurar:** Veja instruções detalhadas na [documentação do GitBook](https://eduardos-organization-23.gitbook.io/controlmed/).
 * **Como a API funciona:** Exemplos de uso e endpoints disponíveis na seção de API do GitBook.
 * **Resumo técnico completo:** Arquitetura, fluxos e integrações descritos na documentação.
 
