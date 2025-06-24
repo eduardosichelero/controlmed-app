@@ -2,7 +2,6 @@ import SlotsList from "../components/SlotsList";
 import MedicamentoForm from "../components/MedicamentoForm";
 import EstatisticasCard from "../components/EstatisticasCard";
 
-// Funções utilitárias para estatísticas
 function getMedicamentoMaisFrequente(slots) {
   const nomes = slots.filter((s) => s && s.nome).map((s) => s.nome);
   if (nomes.length === 0) return "Nenhum";
@@ -20,14 +19,14 @@ export default function DashboardPage({ slots, onRemove, form, onChange, onSubmi
   const maisFrequente = getMedicamentoMaisFrequente(slots);
 
   return (
-    <div className="w-full flex flex-col hd:grid hd:grid-cols-3 gap-4 px-2 sm:px-4 md:px-8 pb-4 sm:pb-8">
-      <div className="flex justify-center">
+    <div className="w-full flex flex-col lg:flex-row gap-4 px-2 sm:px-4 md:px-8 pb-4 sm:pb-8">
+      <div className="flex justify-center w-full lg:w-1/3">
         <SlotsList slots={slots} onRemove={onRemove} />
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center w-full lg:w-1/3">
         <MedicamentoForm form={form} onChange={onChange} onSubmit={onSubmit} />
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center w-full lg:w-1/3">
         <EstatisticasCard slots={slots}>
           <div className="flex flex-col gap-2 mt-4">
             <div className="bg-blue-50 border border-blue-200 text-blue-900 rounded-xl px-4 py-3 flex flex-col items-center shadow-sm">

@@ -11,7 +11,6 @@ export default function CadastrarPage({ form, onChange, onSubmit }) {
     if (nome && form.nome !== nome) {
       onChange({ target: { name: "nome", value: nome } });
     }
-    // eslint-disable-next-line
   }, [location.search]);
 
   return (

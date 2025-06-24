@@ -2,7 +2,6 @@ import React from "react";
 import Icon from "./Icon";
 
 export default function MedicamentoForm({ form, onChange, onSubmit }) {
-  // Função para validar se o horário é válido para o dia selecionado
   function horarioValido() {
     if (form.dia === "hoje" && form.horario) {
       const agora = new Date();
@@ -24,7 +23,7 @@ export default function MedicamentoForm({ form, onChange, onSubmit }) {
   }
 
   return (
-    <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full min-w-[260px] max-w-2xl shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
+    <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full min-w-[260px] max-w-full h-full min-h-[420px] shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
       <div className="absolute right-6 top-6 opacity-10 text-8xl pointer-events-none select-none">
         <Icon name="medication" className="text-blue-300 text-8xl" />
       </div>

@@ -10,17 +10,46 @@ function formatarDataHorario(horario) {
 }
 
 export default function EstatisticasCard({ slots, children }) {
-  const total = slots.filter(s => s.nome).length;
+  const [historico, setHistorico] = useState(() => {
+    const salvo = localStorage.getItem("historico_medicamentos");
+    return salvo ? JSON.parse(salvo) : [];
+  });
+
+  // Atualiza o histórico sempre que slots mudar
+  useEffect(() => {
+    const medicamentosValidos = slots.filter(s => s && s.nome && s.horario);
+    if (medicamentosValidos.length > 0) {
+      // Carrega o histórico atual do localStorage para garantir persistência
+      const salvo = localStorage.getItem("historico_medicamentos");
+      const historicoAtual = salvo ? JSON.parse(salvo) : [];
+      let mudou = false;
+      medicamentosValidos.forEach((med) => {
+        if (!historicoAtual.some(h => h.nome === med.nome && h.horario === med.horario)) {
+          historicoAtual.push(med);
+          mudou = true;
+        }
+      });
+      if (mudou) {
+        setHistorico(historicoAtual);
+        localStorage.setItem("historico_medicamentos", JSON.stringify(historicoAtual));
+      } else {
+        setHistorico(historicoAtual);
+      }
+    } else {
+      // Se não há medicamentos válidos, apenas recarregue o histórico salvo
+      const salvo = localStorage.getItem("historico_medicamentos");
+      setHistorico(salvo ? JSON.parse(salvo) : []);
+    }
+  }, [slots]);
+
+  const total = slots.filter(s => s && s.nome).length;
   const proximos = slots
-    .filter(s => s.nome && s.horario)
+    .filter(s => s && s.nome && s.horario)
     .map(s => s.horario)
     .sort();
 
-  // Mostra os 3 últimos medicamentos cadastrados
-  const historico = slots
-    .filter(s => s.nome && s.horario)
-    .slice(-3)
-    .reverse();
+  // Mostra os 3 últimos medicamentos cadastrados do histórico persistente
+  const ultimosHistorico = historico.slice(-3).reverse();
 
   return (
     <div className="relative rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 w-full max-w-6xl min-w-[280px] shadow-xl flex flex-col transition-all duration-150 ease-out mx-auto overflow-hidden">
@@ -65,9 +94,9 @@ export default function EstatisticasCard({ slots, children }) {
         </div>
         <div className="mt-4">
           <span className="font-semibold text-blue-700">Histórico de medicamentos:</span>
-          {historico.length > 0 ? (
+          {ultimosHistorico.length > 0 ? (
             <ul className="list-disc ml-5 mt-1 space-y-1">
-              {historico.map((item, idx) => (
+              {ultimosHistorico.map((item, idx) => (
                 <li key={idx} className="text-base break-words max-w-full">
                   <span className="font-bold text-blue-700">{item.nome || "Sem nome"}</span>{" "}
                   <span className="text-gray-700">em</span>{" "}

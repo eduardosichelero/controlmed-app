@@ -9,6 +9,7 @@ import MedicamentosPage from "./pages/MedicamentosPage";
 import CadastrarPage from "./pages/CadastrarPage";
 import EstatisticasPage from "./pages/EstatisticasPage";
 import MedicamentosComunsPage from "./pages/MedicamentosComunsPage";
+import { apiFetch } from "./api";
 
 export default function ControleMedicamentos() {
   const [slots, setSlots] = useState([]);
@@ -34,7 +35,7 @@ export default function ControleMedicamentos() {
   const fetchSlots = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/medicamentos");
+      const response = await apiFetch("/medicamentos");
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       const paddedData = [...data];
@@ -42,9 +43,19 @@ export default function ControleMedicamentos() {
         paddedData.push({ nome: "", horario: "", dia: "", data_escolhida: "" });
       }
       setSlots(paddedData.slice(0, 3));
+      const novosHorarios = paddedData.map(slot => slot && slot.horario).filter(Boolean);
+      setAlertasDesligados(prev => {
+        const atualizados = {};
+        for (const horario of novosHorarios) {
+          if (prev[horario]) {
+            atualizados[horario] = true;
+          }
+        }
+        return atualizados;
+      });
     } catch (error) {
       setMessage("Erro ao carregar medicamentos. Tente novamente.");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
     }
     setLoading(false);
   };
@@ -67,7 +78,7 @@ export default function ControleMedicamentos() {
     e.preventDefault();
     if (!form.slot) {
       setMessage("Por favor, selecione um slot.");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
       return;
     }
     const slotIndex = parseInt(form.slot, 10) - 1;
@@ -78,10 +89,10 @@ export default function ControleMedicamentos() {
       );
       if (!confirmar) {
         setMessage("Cadastro cancelado.");
-        setTimeout(() => setMessage(""), 3000); // 3 segundos
+        setTimeout(() => setMessage(""), 3000); 
         return;
       }
-      await fetch(`http://localhost:5000/medicamentos/${form.slot}`, {
+      await apiFetch(`/medicamentos/${form.slot}`, {
         method: "DELETE",
       });
     }
@@ -103,12 +114,12 @@ export default function ControleMedicamentos() {
       dataCompleta = `${form.data_escolhida} ${form.horario}`;
     } else {
       setMessage("Por favor, selecione o dia corretamente.");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5000/medicamentos", {
+      const response = await apiFetch("/medicamentos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -125,7 +136,7 @@ export default function ControleMedicamentos() {
 
       await fetchSlots();
       setMessage("Medicamento cadastrado/atualizado com sucesso!");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
       setForm({
         slot: "",
         nome: "",
@@ -136,24 +147,23 @@ export default function ControleMedicamentos() {
       });
     } catch (error) {
       setMessage("Erro ao cadastrar medicamento. Tente novamente.");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
     }
   };
 
-  // Altere a função removerMedicamento para usar setMessage e esconder após 5 segundos
   const removerMedicamento = async (slotIdx) => {
     if (!window.confirm("Tem certeza que deseja remover este medicamento?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/medicamentos/${slotIdx + 1}`, {
+      const response = await apiFetch(`/medicamentos/${slotIdx + 1}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Erro ao remover medicamento");
       await fetchSlots();
       setMessage("Medicamento removido com sucesso!");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
     } catch (error) {
       setMessage("Erro ao remover medicamento.");
-      setTimeout(() => setMessage(""), 3000); // 3 segundos
+      setTimeout(() => setMessage(""), 3000); 
     }
   };
 
@@ -162,7 +172,7 @@ export default function ControleMedicamentos() {
     const interval = setInterval(async () => {
       let data = [];
       try {
-        const response = await fetch("http://localhost:5000/medicamentos");
+        const response = await apiFetch("/medicamentos");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         data = await response.json();
         const paddedData = [...data];
@@ -172,22 +182,29 @@ export default function ControleMedicamentos() {
         setSlots(paddedData.slice(0, 3));
       } catch (error) {
         setMessage("Erro ao carregar medicamentos. Tente novamente.");
-        setTimeout(() => setMessage(""), 3000); // 3 segundos
+        setTimeout(() => setMessage(""), 3000); 
       }
 
       const agora = new Date();
-      const ano = agora.getFullYear();
-      const mes = String(agora.getMonth() + 1).padStart(2, "0");
-      const dia = String(agora.getDate()).padStart(2, "0");
-      const hora = String(agora.getHours()).padStart(2, "0");
-      const minuto = String(agora.getMinutes()).padStart(2, "0");
+      console.log("Agora navegador:", agora.toISOString());
+      console.log("Slots recebidos:", data);
+      data.forEach(slot => {
+        if (slot && slot.horario) {
+          console.log("Slot:", slot.nome, "Horario:", slot.horario, "Date JS:", new Date(slot.horario.replace(" ", "T")).toISOString());
+        }
+      });
 
       const proximo = data.find(
         (slot) => {
-          if (!slot || !slot.horario || !slot.nome || slot.notificado || alertasDesligados[slot.horario]) return false;
+          if (!slot || !slot.horario || !slot.nome) return false;
           const slotDate = new Date(slot.horario.replace(" ", "T"));
-          // Mostra o lembrete se o horário já passou ou é agora, e não foi desligado
-          return slotDate <= agora;
+          return (
+            slotDate.getFullYear() === agora.getFullYear() &&
+            slotDate.getMonth() === agora.getMonth() &&
+            slotDate.getDate() === agora.getDate() &&
+            slotDate.getHours() === agora.getHours() &&
+            slotDate.getMinutes() === agora.getMinutes()
+          );
         }
       );
       if (proximo && proximo.nome) {
@@ -195,7 +212,7 @@ export default function ControleMedicamentos() {
       } else {
         setLembrete(null);
       }
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [alertasEnviados, alertasDesligados]);
@@ -207,7 +224,7 @@ export default function ControleMedicamentos() {
       [horario]: true
     }));
     setAlertaDesligadoMsg(true);
-    setTimeout(() => setAlertaDesligadoMsg(false), 3000); // 3 segundos
+    setTimeout(() => setAlertaDesligadoMsg(false), 3000); 
 
     setAlertasEnviados(prev => {
       const novo = { ...prev };
@@ -215,22 +232,20 @@ export default function ControleMedicamentos() {
       return novo;
     });
 
-    // NOVO: avisa o backend que o alerta foi desligado
+    // avisa o backend que o alerta foi desligado
     try {
-      await fetch("http://localhost:5000/desligar-alerta", {
+      await apiFetch("/desligar-alerta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ horario }),
       });
     } catch (e) {
-      // Se falhar, só ignora
     }
   };
 
-  // O useEffect para esconder mensagem de sucesso pode ser simplificado para esconder qualquer mensagem após 5 segundos:
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(() => setMessage(""), 3000); // 3 segundos
+      const timer = setTimeout(() => setMessage(""), 3000); 
       return () => clearTimeout(timer);
     }
   }, [message]);

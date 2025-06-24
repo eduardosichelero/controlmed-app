@@ -9,8 +9,6 @@ function formatarDataHorario(horario) {
   const [ano, mes, dia] = data.split("-");
   return `${dia}/${mes}/${ano} ${hora}`;
 }
-
-// Defina cores e rótulos para cada slot
 const slotColors = [
   { icon: "text-blue-600 bg-blue-100", label: "Slot 1" },
   { icon: "text-green-600 bg-green-100", label: "Slot 2" },
