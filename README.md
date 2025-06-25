@@ -11,7 +11,7 @@ Bem-vindo ao **ControlMed**, um sistema inteligente para controle e liberação 
 * Integração com dispositivos **IoT** como Arduino e Raspberry Pi
 
 ### 🔄 Fluxo da aplicação
-
+![Fluxo da aplicação](./assets/fluxo.png)
 ### 📑 Sumário
 
 * Funcionalidades principais
