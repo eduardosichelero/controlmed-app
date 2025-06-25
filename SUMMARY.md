@@ -1,6 +1,6 @@
 # Table of contents
 
-* [💊 Introdução](README.md)
+* [💊 ControlMed](README.md)
 * [Instalação e configuração](docs/instalacao-e-configuracao.md)
 * [API](docs/api.md)
 * [Resumão](docs/resumao.md)
