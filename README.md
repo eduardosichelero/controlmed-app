@@ -1,7 +1,3 @@
----
-icon: book-open
----
-
 # 💊 ControlMed
 
 ![](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge\&logo=javascript\&logoColor=%23F7DF1E) ![](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge\&logo=react\&logoColor=%2361DAFB) ![](https://img.shields.io/badge/python-3670A0?style=for-the-badge\&logo=python\&logoColor=ffdd54) ![](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge\&logo=flask\&logoColor=white) ![](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge\&logo=Arduino\&logoColor=white) ![](https://img.shields.io/badge/GitBook-%23000000.svg?style=for-the-badge\&logo=gitbook\&logoColor=white)
